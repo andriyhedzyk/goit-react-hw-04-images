@@ -1,41 +1,38 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types'; 
 import s from './Searchbar.module.css'
 import { toast } from 'react-toastify';
 
 
-export default class Searchbar extends Component {
-  state = {
-    query: '',
+export default function Searchbar ({onSubmit}) {
+  const [query, setQuery] = useState('');
+  
+  const handleInputChange = e => {
+    setQuery(e.target.value.toLowerCase());
   };
 
-  handleInputChange = e => {
-    this.setState({ query: e.target.value.toLowerCase() });
-  };
-
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
 
-    if (this.state.query.trim() === '') {
+    if (query.trim() === '') {
       toast.error('Enter your search query');
       return;
     }
 
-    this.props.onSubmit(this.state.query);
+    onSubmit(query);
   };
 
-  render() {
     return (
       <header className={s.searchbar}>
-        <form className={s.searchForm} onSubmit={this.handleSubmit}>
+        <form className={s.searchForm} onSubmit={handleSubmit}>
           <input
-            onInput={this.handleInputChange}
+            onInput={handleInputChange}
             className={s.SearchFormInput}
             type="text"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            value = {this.state.query}
+            value = {query}
           />
           <button type="submit" className={s.searchFormButton}>
             search
@@ -43,7 +40,6 @@ export default class Searchbar extends Component {
         </form>
       </header>
     );
-  }
 }
 
 Searchbar.propTypes = {
